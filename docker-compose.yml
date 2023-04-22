@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.23
+    container_name: mysql-container
+    restart: always
+    environment:
+      TZ: Europe/London
+      NODE_ENV: development
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - torm-test
+
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin:5.2.1
+    ports:
+      - '8088:80'
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - torm-test
+networks:
+  torm-test:
